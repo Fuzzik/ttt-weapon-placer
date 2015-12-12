@@ -10,9 +10,9 @@ TOOL.ClientConVar["replacespawns"] = "0"
 cleanup.Register("ttt_weapons")
 
 if CLIENT then
-   language.Add("tool.fuzzik_tttweaponplacer.name", "Fuzzik's TTT Weapon Placer" )
-   language.Add("tool.fuzzik_tttweaponplacer.desc", "Spawn TTT weapon dummies and export their placement" )
-   language.Add("tool.fuzzik_tttweaponplacer.0", "Left click to spawn entity. Right click for matching ammo." )
+   language.Add("tool.tttweaponplacer.name", "Fuzzik's TTT Weapon Placer" )
+   language.Add("tool.tttweaponplacer.desc", "Spawn TTT weapon dummies and export their placement" )
+   language.Add("tool.tttweaponplacer.0", "Left click to spawn entity. Right click for matching ammo." )
    language.Add("Cleanup_ttt_weapons", "TTT Dummy Weapons/ammo/spawns")
    language.Add("Undone_TTTWeapon", "Undone TTT item" )
 end
@@ -168,30 +168,30 @@ function TOOL:RightClick( trace )
 end
 
 function TOOL.BuildCPanel(panel) -- note that this is not a method, REAL NICE
-   panel:AddControl( "Header", { Text = "tool.fuzzik_tttweaponplacer.name", Description = language.GetPhrase("tool.fuzzik_tttweaponplacer.desc")})
+   panel:AddControl( "Header", { Text = "tool.tttweaponplacer.name", Description = language.GetPhrase("tool.tttweaponplacer.desc")})
 
    local opts = {}
    for w, info in pairs(weps) do
-      opts[info.name] = {fuzzik_tttweaponplacer_weapon = w}
+      opts[info.name] = {tttweaponplacer_weapon = w}
    end
 
    panel:AddControl("ListBox", { Label = "Weapons", Height = "200", Options = opts } )
 
-   panel:AddControl("Button", {Label="Report counts", Command="fuzzik_tttweaponplacer_count", Text="Count"})
+   panel:AddControl("Button", {Label="Report counts", Command="tttweaponplacer_count", Text="Count"})
 
    panel:AddControl("Label", {Text="Export", Description="Export weapon placements"})
 
-   panel:AddControl("CheckBox", {Label="Replace existing player spawnpoints", Command="fuzzik_tttweaponplacer_replacespawns", Text="Replace spawns"})
+   panel:AddControl("CheckBox", {Label="Replace existing player spawnpoints", Command="tttweaponplacer_replacespawns", Text="Replace spawns"})
 
-   panel:AddControl( "Button",  { Label	= "Export to file", Command = "fuzzik_tttweaponplacer_queryexport", Text = "Export"})
+   panel:AddControl( "Button",  { Label	= "Export to file", Command = "tttweaponplacer_queryexport", Text = "Export"})
 
    panel:AddControl("Label", {Text="Import", Description="Import weapon placements"})
 
-   panel:AddControl( "Button",  { Label	= "Import from file", Command = "fuzzik_tttweaponplacer_queryimport", Text = "Import"})
+   panel:AddControl( "Button",  { Label	= "Import from file", Command = "tttweaponplacer_queryimport", Text = "Import"})
 
-   panel:AddControl("Button", {Label="Convert HL2 entities", Command = "fuzzik_tttweaponplacer_replacehl2", Text="Convert"})
+   panel:AddControl("Button", {Label="Convert HL2 entities", Command = "tttweaponplacer_replacehl2", Text="Convert"})
 
-   panel:AddControl("Button", {Label="Remove all existing weapon/ammo", Command = "fuzzik_tttweaponplacer_removeall", Text="Remove all existing items"})
+   panel:AddControl("Button", {Label="Remove all existing weapon/ammo", Command = "tttweaponplacer_removeall", Text="Remove all existing items"})
 end
 
 -- STOOLs not being loaded on client = headache bonanza
@@ -207,10 +207,10 @@ if CLIENT then
          Derma_StringRequest("File exists", "The file \"" .. fname .. "\" already exists. Save under a different filename? Leave unchanged to overwrite.",
                              fname,
                              function(txt)
-                                RunConsoleCommand("fuzzik_tttweaponplacer_export", txt)
+                                RunConsoleCommand("tttweaponplacer_export", txt)
                              end)
       else
-         RunConsoleCommand("fuzzik_tttweaponplacer_export")
+         RunConsoleCommand("tttweaponplacer_export")
       end
    end
 
@@ -223,14 +223,14 @@ if CLIENT then
       Derma_StringRequest("Import", "What file do you want to import? Note that files meant for other maps will result in crazy things happening.",
                           fname,
                           function(txt)
-                             RunConsoleCommand("fuzzik_tttweaponplacer_import", txt)
+                             RunConsoleCommand("tttweaponplacer_import", txt)
                           end)
 
    end
 else
    -- again, hilarious things happen when this shit is used in mp
-   concommand.Add("fuzzik_tttweaponplacer_queryexport", function() BroadcastLua("QueryFileExists()") end)
-   concommand.Add("fuzzik_tttweaponplacer_queryimport", function() BroadcastLua("QueryImportName()") end)
+   concommand.Add("tttweaponplacer_queryexport", function() BroadcastLua("QueryFileExists()") end)
+   concommand.Add("tttweaponplacer_queryimport", function() BroadcastLua("QueryImportName()") end)
 end
 
 WEAPON_PISTOL = 1
@@ -292,7 +292,7 @@ local function PrintCount(ply)
    ply:ChatPrint("Random weapons: " .. count[WEAPON_RANDOM])
    ply:ChatPrint("Player spawns: " .. count[PLAYERSPAWN])
 end
-concommand.Add("fuzzik_tttweaponplacer_count", PrintCount)
+concommand.Add("tttweaponplacer_count", PrintCount)
 
 -- This shit will break terribly in MP
 if SERVER or CLIENT then
@@ -305,7 +305,7 @@ if SERVER or CLIENT then
 
       if not map then return end
 
-      --local frozen_only = GetConVar("fuzzik_tttweaponplacer_frozen"):GetBool()
+      --local frozen_only = GetConVar("tttweaponplacer_frozen"):GetBool()
       local frozen_only = false
 
       -- Nice header, # is comment
@@ -314,7 +314,7 @@ if SERVER or CLIENT then
       buf = buf .. "# Exported by: " .. ply:Nick() .. "\n"
 
       -- Write settings ("setting: <name> <value>")
-      local rspwns = GetConVar("fuzzik_tttweaponplacer_replacespawns"):GetBool() and "1" or "0"
+      local rspwns = GetConVar("tttweaponplacer_replacespawns"):GetBool() and "1" or "0"
       buf = buf .. "setting:\treplacespawns " .. rspwns .. "\n"
 
       local num = 0
@@ -344,7 +344,7 @@ if SERVER or CLIENT then
 
       ply:ChatPrint(num .. " placements saved to /garrysmod/data/" .. fname)
    end
-   concommand.Add("fuzzik_tttweaponplacer_export", Export)
+   concommand.Add("tttweaponplacer_export", Export)
 
    local function SpawnDummyEnt(cls, pos, ang)
       if not cls or not pos or not ang then return false end
@@ -398,7 +398,7 @@ if SERVER or CLIENT then
             if #data > 0 then
                if data[1] == "setting:" and tostring(data[2]) then
                   local raw = string.Explode(" ", data[2])
-                  RunConsoleCommand("fuzzik_tttweaponplacer_" .. raw[1], tonumber(raw[2]))
+                  RunConsoleCommand("tttweaponplacer_" .. raw[1], tonumber(raw[2]))
 
                   fail = false
                   num = num - 1
@@ -427,7 +427,7 @@ if SERVER or CLIENT then
 
       ply:ChatPrint("Spawned " .. num .. " dummy ents")
    end
-   concommand.Add("fuzzik_tttweaponplacer_import", Import)
+   concommand.Add("tttweaponplacer_import", Import)
 
    local function RemoveAll(ply, cmd, args)
       if not IsValid(ply) then return end
@@ -458,7 +458,7 @@ if SERVER or CLIENT then
 
       ply:ChatPrint("Removed " .. num .. " weapon/ammo ents")
    end
-   concommand.Add("fuzzik_tttweaponplacer_removeall", RemoveAll)
+   concommand.Add("tttweaponplacer_removeall", RemoveAll)
 
    local hl2_replace = {
       ["item_ammo_pistol"] = "item_ammo_pistol_ttt",
@@ -531,5 +531,5 @@ if SERVER or CLIENT then
 
       ply:ChatPrint("Replaced " .. c .. " HL2 entities with TTT versions.")
    end
-   concommand.Add("fuzzik_tttweaponplacer_replacehl2", ReplaceHL2Ents)
+   concommand.Add("tttweaponplacer_replacehl2", ReplaceHL2Ents)
 end
