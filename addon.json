@@ -1,0 +1,12 @@
+{
+	"title"		:	"TTT Weapon Placer",
+	"type"		:	"tool",
+	"tags"		:	[ "fun", "realism" ],
+	"ignore"	:
+	[
+		".git*",
+		".gitattributes",
+		".gitignore",
+		"*.md"
+	]
+}
