@@ -1,6 +1,4 @@
-Fuzzik's TTT Weapon Placer
+TTT Weapon Placer
 =========
 
-A modded version of SVDM's TTT Weapon Placer that includes the weapons from my pack.
-
-All changes will be pushed to this repo and tested before they are included in the Steam addon.
+Pull requests are welcome; If you feel like you can improve the addon, feel free to submit your changes.
