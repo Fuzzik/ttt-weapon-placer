@@ -38,7 +38,8 @@ local weps = {
    weapon_ttt_p228 = {name="P228", snd="item_ammo_pistol_ttt"},
    weapon_ttt_pistol = {name="USP", snd="item_ammo_pistol_ttt"},
    weapon_ttt_pump = {name="Pump Shotgun", snd="item_box_buckshot_ttt"},
-   weapon_ttt_sg552 = {name="SG552", snd="item_ammo_smg1_ttt"},
+   weapon_ttt_sg550 = {name="SG 550", snd="item_ammo_357_ttt"},
+   weapon_ttt_sg552 = {name="SG 552", snd="item_ammo_smg1_ttt"},
    weapon_ttt_smg = {name="MP7", snd="item_ammo_pistol_ttt"},
 
    ttt_random_weapon = {name="Random weapon", snd="ttt_random_ammo"},
@@ -68,6 +69,7 @@ local mdls = {
    weapon_ttt_p228 = "models/weapons/w_pist_p228.mdl",
    weapon_ttt_pistol = "models/weapons/w_pistol.mdl",
    weapon_ttt_pump = "models/weapons/w_shot_m3super90.mdl",
+   weapon_ttt_sg550 = "models/weapons/w_snip_sg550.mdl",
    weapon_ttt_sg552 = "models/weapons/w_rif_sg552.mdl",
    weapon_ttt_smg = "models/weapons/w_smg1.mdl",
 
@@ -258,6 +260,7 @@ local enttypes = {
    weapon_ttt_galil = WEAPON_HEAVY,
    weapon_ttt_mp5 = WEAPON_HEAVY,
    weapon_ttt_pump = WEAPON_HEAVY,
+   weapon_ttt_sg550 = WEAPON_HEAVY,
    weapon_ttt_sg552 = WEAPON_HEAVY,
    weapon_ttt_smg = WEAPON_HEAVY,
 
